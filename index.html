@@ -115,7 +115,7 @@
                 <ul class="nav-menu">
                     <li><a href="index.html">Dashboard</a></li>
                     <li><a href="alerts.html">Sistema de Alertas</a></li>
-                    <li><a href="README.md">Documentação</a></li>
+                    <li><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank">Documentação</a></li>
                 </ul>
             </div>
         </nav>
@@ -254,7 +254,7 @@
                 <li><strong>Painel C (A Máquina):</strong> Analisa a rentabilidade e margem por produto</li>
             </ul>
             <p class="access-info">
-                <strong>Sistema de Testes:</strong> Este é um ambiente de demonstração. Use o painel de testes acima para simular alertas do sistema. Para mais informações, consulte a <a href="alerts.html">página de Sistema de Alertas</a> ou a <a href="SISTEMA_ALERTAS.md">documentação completa</a>.
+                <strong>Sistema de Testes:</strong> Este é um ambiente de demonstração. Use o painel de testes acima para simular alertas do sistema. Para mais informações, consulte a <a href="alerts.html">página de Sistema de Alertas</a> ou a <a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados/blob/main/SISTEMA_ALERTAS.md" target="_blank">documentação completa</a>.
             </p>
         </div>
 
@@ -367,6 +367,18 @@
         
         // Update every 30 seconds (demonstration)
         setInterval(updateKPIs, 30000);
+
+        // Handle hash parameters from alerts.html links
+        window.addEventListener('load', () => {
+            const hash = window.location.hash;
+            if (hash === '#test-alert1') {
+                setTimeout(() => testAlert1(), 500);
+            } else if (hash === '#test-alert2') {
+                setTimeout(() => testAlert2(), 500);
+            } else if (hash === '#test-alert3') {
+                setTimeout(() => testAlert3(), 500);
+            }
+        });
     </script>
 </body>
 </html>
