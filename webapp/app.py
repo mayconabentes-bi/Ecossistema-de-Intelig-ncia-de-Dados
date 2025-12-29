@@ -5,10 +5,13 @@ Sistema Interno de Visualização e Entrada de Dados
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from markupsafe import escape
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from functools import wraps
 import json
 import os
 from datetime import datetime
+import pandas as pd
+import sqlite3
 
 app = Flask(__name__)
 # IMPORTANTE: Em produção, usar variável de ambiente: app.secret_key = os.environ.get('SECRET_KEY')
@@ -16,6 +19,12 @@ app.secret_key = os.environ.get('SECRET_KEY', 'cdl-manaus-secret-key-change-in-p
 
 # Configurações
 DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'entries.json')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+DATABASE_FILE = os.path.join(os.path.dirname(__file__), 'database.db')
+ALLOWED_EXTENSIONS = {'csv'}
+
+# Criar pasta de uploads se não existir
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Usuários (em produção, usar banco de dados)
 USERS = {
@@ -45,6 +54,52 @@ def save_data(data):
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+def allowed_file(filename):
+    """Verifica se o arquivo tem extensão permitida"""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def processar_csv_financeiro(filepath):
+    """
+    Processa arquivo CSV financeiro legado e salva no banco SQLite.
+    
+    Args:
+        filepath: Caminho do arquivo CSV a ser processado
+        
+    Returns:
+        tuple: (sucesso: bool, mensagem: str, linhas_processadas: int)
+    """
+    try:
+        # Tentar ler CSV com encoding latin1 e pulando linhas de cabeçalho
+        # header=4: O sistema legado RESUMO EXECUTIVO tem 4 linhas de metadados/títulos
+        # antes do cabeçalho real da tabela (linha 5)
+        df = pd.read_csv(filepath, encoding='latin1', header=4, on_bad_lines='skip')
+        
+        # Remover linhas completamente vazias
+        df = df.dropna(how='all')
+        
+        # Se o dataframe estiver vazio após limpeza
+        if df.empty:
+            return False, "O arquivo CSV está vazio ou não contém dados válidos.", 0
+        
+        # Conectar ao banco SQLite usando context manager
+        with sqlite3.connect(DATABASE_FILE) as conn:
+            # Adicionar metadados de importação
+            df['data_importacao'] = datetime.now().isoformat()
+            df['arquivo_origem'] = os.path.basename(filepath)
+            
+            # Salvar no banco de dados (append para criar histórico)
+            linhas_inseridas = len(df)
+            df.to_sql('financeiro', conn, if_exists='append', index=False)
+        
+        return True, f"Arquivo processado com sucesso! {linhas_inseridas} linhas importadas.", linhas_inseridas
+        
+    except UnicodeDecodeError:
+        return False, "Erro de codificação: O arquivo não está no formato esperado (latin1).", 0
+    except pd.errors.EmptyDataError:
+        return False, "Arquivo CSV vazio ou corrompido.", 0
+    except Exception as e:
+        return False, f"Erro ao processar arquivo: {str(e)}", 0
 
 @app.route('/')
 def index():
@@ -140,6 +195,58 @@ def api_stats():
         'total_value': total_value,
         'last_update': last_entry.get('timestamp')
     })
+
+@app.route('/upload_csv', methods=['POST'])
+@login_required
+def upload_csv():
+    """
+    Rota para upload e processamento de arquivos CSV financeiros.
+    Realiza ETL: Extract (upload), Transform (pandas), Load (SQLite).
+    """
+    try:
+        # Verificar se o arquivo foi enviado
+        if 'csv_file' not in request.files:
+            flash('Nenhum arquivo foi selecionado.', 'danger')
+            return redirect(url_for('data_entry'))
+        
+        file = request.files['csv_file']
+        
+        # Verificar se o usuário selecionou um arquivo
+        if file.filename == '':
+            flash('Nenhum arquivo foi selecionado.', 'danger')
+            return redirect(url_for('data_entry'))
+        
+        # Verificar se o arquivo tem extensão permitida
+        if file and allowed_file(file.filename):
+            # Sanitizar nome do arquivo
+            filename = secure_filename(file.filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"{timestamp}_{filename}"
+            filepath = os.path.join(UPLOAD_FOLDER, filename)
+            
+            # Salvar arquivo temporariamente
+            file.save(filepath)
+            
+            # Processar CSV e carregar no banco
+            sucesso, mensagem, linhas = processar_csv_financeiro(filepath)
+            
+            if sucesso:
+                flash(mensagem, 'success')
+                # Remover arquivo temporário após processamento bem-sucedido para economizar espaço
+                try:
+                    os.remove(filepath)
+                except OSError:
+                    pass  # Ignorar erro se não conseguir remover
+            else:
+                flash(mensagem, 'danger')
+            
+        else:
+            flash('Formato de arquivo inválido. Por favor, envie um arquivo CSV.', 'danger')
+    
+    except Exception as e:
+        flash(f'Erro ao processar upload: {str(e)}', 'danger')
+    
+    return redirect(url_for('data_entry'))
 
 if __name__ == '__main__':
     # Para desenvolvimento: debug=True
