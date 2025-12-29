@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Alertas Automáticos do Ecossistema de Inteligência de Dados da CDL Manaus. Notificações inteligentes para decisão estratégica.">
+    <meta name="keywords" content="Alertas, Notificações, Business Intelligence, CDL Manaus, Sistema de Gestão">
     <title>Sistema de Alertas - CDL Manaus</title>
     <link rel="stylesheet" href="webapp/static/css/style.css">
     <style>
@@ -78,6 +80,68 @@
             padding: 0.75rem 1.5rem;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+        .test-alert-btn:hover {
+            background: #2980b9;
+        }
+        .test-alert-btn:focus {
+            outline: 3px solid #ffa500;
+            outline-offset: 2px;
+        }
+        .skip-to-content {
+            position: absolute;
+            left: -9999px;
+            z-index: 999;
+            padding: 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+        }
+        .skip-to-content:focus {
+            left: 50%;
+            transform: translateX(-50%);
+            top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-color);
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .nav-menu.active {
+                display: flex;
+            }
+            .mobile-menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.5rem;
+            }
+            .mobile-menu-toggle:focus {
+                outline: 3px solid #ffa500;
+                outline-offset: 2px;
+            }
+            .alert-recipients {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
             font-size: 1rem;
             margin-top: 1rem;
             transition: background 0.3s;
@@ -161,23 +225,33 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
+    <!-- Skip to content link for keyboard navigation -->
+    <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
+    
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
             <div class="container">
                 <div class="logo">
                     <h1>🏢 CDL Manaus</h1>
                     <p class="subtitle">Ecossistema de Inteligência de Dados</p>
                 </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html">Dashboard</a></li>
-                    <li><a href="alerts.html">Sistema de Alertas</a></li>
-                    <li><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank">Documentação</a></li>
+                <button class="mobile-menu-toggle" 
+                        aria-label="Menu de navegação" 
+                        aria-expanded="false"
+                        aria-controls="main-nav"
+                        onclick="toggleMobileMenu()">
+                    ☰
+                </button>
+                <ul class="nav-menu" id="main-nav" role="menu">
+                    <li role="none"><a href="index.html" role="menuitem">Dashboard</a></li>
+                    <li role="none"><a href="alerts.html" role="menuitem" aria-current="page">Sistema de Alertas</a></li>
+                    <li role="none"><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank" rel="noopener noreferrer" role="menuitem" aria-label="Documentação (abre em nova aba)">Documentação</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <main class="container">
+    <main class="container" id="main-content" role="main">
         <div class="test-alert-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             ✨ NOVO: Sistema completo com ETL, SQLite e Entrada de Dados Web | <a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados/tree/main/webapp" target="_blank" style="color: white; text-decoration: underline; font-weight: bold;">Ver Documentação →</a>
         </div>
@@ -188,11 +262,11 @@
         </section>
 
         <!-- Alert Rule 1 -->
-        <div class="alert-rule-card">
+        <article class="alert-rule-card" aria-labelledby="alert-1-title">
             <div class="alert-rule-header">
-                <div class="alert-icon">🔴</div>
+                <div class="alert-icon" aria-hidden="true">🔴</div>
                 <div class="alert-rule-title">
-                    <h3>Alerta 1: Queda Crítica de Cliente Top 20</h3>
+                    <h3 id="alert-1-title">Alerta 1: Queda Crítica de Cliente Top 20</h3>
                     <p class="alert-code">ALERT_001_QUEDA_CLIENTE_TOP20</p>
                 </div>
             </div>
@@ -200,7 +274,7 @@
             <div class="alert-details">
                 <div class="alert-detail-section">
                     <h4>📋 Condição de Disparo</h4>
-                    <div class="alert-condition">
+                    <div class="alert-condition" role="note">
                         <p><strong>SE:</strong> Cliente pertence ao Top 20 (últimos 12 meses)</p>
                         <p><strong>E:</strong> Faturamento da semana atual &lt; (Média últimas 4 semanas - 10%)</p>
                         <p><strong>ENTÃO:</strong> Disparar alerta VERMELHO 🔴</p>
@@ -209,7 +283,7 @@
 
                 <div class="alert-detail-section">
                     <h4>⚡ Ação Automatizada</h4>
-                    <div class="alert-action">
+                    <div class="alert-action" role="note">
                         <p><strong>Canal:</strong> WhatsApp + E-mail</p>
                         <p><strong>Prazo de Ação:</strong> 48 horas</p>
                         <p><strong>Ação Requerida:</strong> Agendar reunião com cliente para entender motivo da redução</p>
@@ -218,13 +292,13 @@
 
                 <div class="alert-detail-section">
                     <h4>👥 Destinatários</h4>
-                    <div class="alert-recipients">
-                        <div class="recipient-card">
+                    <div class="alert-recipients" role="list" aria-label="Lista de destinatários">
+                        <div class="recipient-card" role="listitem">
                             <div class="recipient-name">João Silva</div>
                             <div class="recipient-role">Diretor Comercial</div>
                             <div class="recipient-contact">📱 +55 92 99999-1234</div>
                         </div>
-                        <div class="recipient-card">
+                        <div class="recipient-card" role="listitem">
                             <div class="recipient-name">Maria Santos</div>
                             <div class="recipient-role">Gerente Relacionamento</div>
                             <div class="recipient-contact">📱 +55 92 99999-5678</div>
@@ -234,21 +308,23 @@
 
                 <div class="alert-detail-section">
                     <h4>⏰ Frequência de Verificação</h4>
-                    <span class="frequency-badge">🕐 A cada 2 horas (8h-18h) | Segunda a Sexta</span>
+                    <span class="frequency-badge" role="status">🕐 A cada 2 horas (8h-18h) | Segunda a Sexta</span>
                 </div>
             </div>
 
-            <button class="test-alert-btn" onclick="window.location.href='index.html#test-alert1';">
+            <button class="test-alert-btn" 
+                    onclick="window.location.href='index.html#test-alert1';"
+                    aria-label="Testar Alerta 1 no Dashboard">
                 🧪 Testar Este Alerta
             </button>
-        </div>
+        </article>
 
         <!-- Alert Rule 2 -->
-        <div class="alert-rule-card">
+        <article class="alert-rule-card" aria-labelledby="alert-2-title">
             <div class="alert-rule-header">
-                <div class="alert-icon">🟡</div>
+                <div class="alert-icon" aria-hidden="true">🟡</div>
                 <div class="alert-rule-title">
-                    <h3>Alerta 2: Burn Rate Negativo Consecutivo</h3>
+                    <h3 id="alert-2-title">Alerta 2: Burn Rate Negativo Consecutivo</h3>
                     <p class="alert-code">ALERT_002_BURN_RATE_NEGATIVO</p>
                 </div>
             </div>
@@ -256,7 +332,7 @@
             <div class="alert-details">
                 <div class="alert-detail-section">
                     <h4>📋 Condição de Disparo</h4>
-                    <div class="alert-condition">
+                    <div class="alert-condition" role="note">
                         <p><strong>SE:</strong> Burn Rate Líquido &lt; 0 (negativo)</p>
                         <p><strong>E:</strong> Burn Rate Líquido do mês anterior &lt; 0 (negativo)</p>
                         <p><strong>ENTÃO:</strong> Disparar alerta VERMELHO 🔴</p>
@@ -266,7 +342,7 @@
 
                 <div class="alert-detail-section">
                     <h4>⚡ Ação Automatizada</h4>
-                    <div class="alert-action">
+                    <div class="alert-action" role="note">
                         <p><strong>Canal:</strong> WhatsApp + E-mail (Prioridade CRÍTICA)</p>
                         <p><strong>Prazo de Ação:</strong> 24 horas</p>
                         <p><strong>Ação Requerida:</strong> Reunião emergencial da Diretoria e plano de contingência</p>
@@ -275,13 +351,13 @@
 
                 <div class="alert-detail-section">
                     <h4>👥 Destinatários</h4>
-                    <div class="alert-recipients">
-                        <div class="recipient-card">
+                    <div class="alert-recipients" role="list" aria-label="Lista de destinatários">
+                        <div class="recipient-card" role="listitem">
                             <div class="recipient-name">Carlos Oliveira</div>
                             <div class="recipient-role">Diretor Presidente</div>
                             <div class="recipient-contact">📱 +55 92 99999-9012</div>
                         </div>
-                        <div class="recipient-card">
+                        <div class="recipient-card" role="listitem">
                             <div class="recipient-name">Ana Costa</div>
                             <div class="recipient-role">Diretora Financeira</div>
                             <div class="recipient-contact">📱 +55 92 99999-3456</div>
@@ -291,21 +367,23 @@
 
                 <div class="alert-detail-section">
                     <h4>⏰ Frequência de Verificação</h4>
-                    <span class="frequency-badge">📅 Dia 1 de cada mês, às 9h (após fechamento)</span>
+                    <span class="frequency-badge" role="status">📅 Dia 1 de cada mês, às 9h (após fechamento)</span>
                 </div>
             </div>
 
-            <button class="test-alert-btn" onclick="window.location.href='index.html#test-alert2';">
+            <button class="test-alert-btn" 
+                    onclick="window.location.href='index.html#test-alert2';"
+                    aria-label="Testar Alerta 2 no Dashboard">
                 🧪 Testar Este Alerta
             </button>
-        </div>
+        </article>
 
         <!-- Alert Rule 3 -->
-        <div class="alert-rule-card">
+        <article class="alert-rule-card" aria-labelledby="alert-3-title">
             <div class="alert-rule-header">
-                <div class="alert-icon">🔵</div>
+                <div class="alert-icon" aria-hidden="true">🔵</div>
                 <div class="alert-rule-title">
-                    <h3>Alerta 3: Margem SPC Abaixo do Limite</h3>
+                    <h3 id="alert-3-title">Alerta 3: Margem SPC Abaixo do Limite</h3>
                     <p class="alert-code">ALERT_003_MARGEM_SPC_BAIXA</p>
                 </div>
             </div>
@@ -313,7 +391,7 @@
             <div class="alert-details">
                 <div class="alert-detail-section">
                     <h4>📋 Condição de Disparo</h4>
-                    <div class="alert-condition">
+                    <div class="alert-condition" role="note">
                         <p><strong>SE:</strong> Margem de Contribuição SPC &lt; 60%</p>
                         <p><strong>ENTÃO:</strong></p>
                         <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
@@ -325,7 +403,7 @@
 
                 <div class="alert-detail-section">
                     <h4>⚡ Ação Automatizada</h4>
-                    <div class="alert-action">
+                    <div class="alert-action" role="note">
                         <p><strong>Canal:</strong> WhatsApp + E-mail</p>
                         <p><strong>Prazo de Ação:</strong> 72 horas</p>
                         <p><strong>Ação Requerida:</strong> Renegociar tarifa com fornecedor e revisar precificação</p>
@@ -334,13 +412,13 @@
 
                 <div class="alert-detail-section">
                     <h4>👥 Destinatários</h4>
-                    <div class="alert-recipients">
-                        <div class="recipient-card">
+                    <div class="alert-recipients" role="list" aria-label="Lista de destinatários">
+                        <div class="recipient-card" role="listitem">
                             <div class="recipient-name">Ana Costa</div>
                             <div class="recipient-role">Diretora Financeira</div>
                             <div class="recipient-contact">📱 +55 92 99999-3456</div>
                         </div>
-                        <div class="recipient-card">
+                        <div class="recipient-card" role="listitem">
                             <div class="recipient-name">Pedro Alves</div>
                             <div class="recipient-role">Diretor de Operações</div>
                             <div class="recipient-contact">📱 +55 92 99999-7890</div>
@@ -350,14 +428,16 @@
 
                 <div class="alert-detail-section">
                     <h4>⏰ Frequência de Verificação</h4>
-                    <span class="frequency-badge">🕔 Diariamente às 17h | Segunda a Sexta</span>
+                    <span class="frequency-badge" role="status">🕔 Diariamente às 17h | Segunda a Sexta</span>
                 </div>
             </div>
 
-            <button class="test-alert-btn" onclick="window.location.href='index.html#test-alert3';">
+            <button class="test-alert-btn" 
+                    onclick="window.location.href='index.html#test-alert3';"
+                    aria-label="Testar Alerta 3 no Dashboard">
                 🧪 Testar Este Alerta
             </button>
-        </div>
+        </article>
 
         <!-- Alert Log -->
         <div class="log-section">
@@ -452,12 +532,36 @@
         </div>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
             <p>&copy; 2025 CDL Manaus - Todos os direitos reservados</p>
             <p class="footer-info">Sistema de Business Intelligence em Tempo Real | Versão Online via GitHub Pages</p>
             <p class="footer-info" style="font-size: 0.85rem; margin-top: 0.5rem;">v2.0 - Agora com ETL Pipeline, SQLite e Sistema de Entrada de Dados</p>
         </div>
     </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('main-nav');
+            const button = document.querySelector('.mobile-menu-toggle');
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            
+            menu.classList.toggle('active');
+            button.setAttribute('aria-expanded', !isExpanded);
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('main-nav');
+            const button = document.querySelector('.mobile-menu-toggle');
+            const isClickInside = menu.contains(event.target) || button.contains(event.target);
+            
+            if (!isClickInside && menu.classList.contains('active')) {
+                menu.classList.remove('active');
+                button.setAttribute('aria-expanded', 'false');
+            }
+        });
+    </script>
 </body>
 </html>
