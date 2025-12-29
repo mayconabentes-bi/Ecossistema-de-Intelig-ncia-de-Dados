@@ -1,5 +1,18 @@
 # Ecossistema de Inteligência de Dados - CDL Manaus
 
+## 🚀 Sistema Online via GitHub Pages
+
+**[👉 ACESSAR SISTEMA ONLINE](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/)**
+
+- **Dashboard Interativo**: [https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/)
+- **Sistema de Alertas**: [https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/alerts.html](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/alerts.html)
+
+🧪 **Ambiente de Testes**: Demonstração funcional com simulação de alertas em tempo real.
+
+> **📌 Nota para Administradores**: Se o site não estiver acessível, consulte [GITHUB_PAGES_SETUP.md](./GITHUB_PAGES_SETUP.md) para instruções de configuração inicial do GitHub Pages.
+
+---
+
 ## 🎯 Visão Geral
 
 Sistema de Business Intelligence em Tempo Real para a CDL Manaus, transformando a gestão de **reativa** (baseada em relatórios mensais em PDF) para **proativa** (dashboards em tempo real com alertas automatizados).
@@ -184,6 +197,43 @@ Prazo: Renegociação com fornecedor em 72h
 
 ---
 
+## 🧪 Como Testar os Alertas
+
+### Ambiente de Demonstração Online
+
+1. **Acessar o Dashboard Online**: [https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/)
+
+2. **Testar Alertas Individuais**:
+   - Na página principal, use o **Painel de Testes de Alertas**
+   - Clique nos botões para simular cada tipo de alerta:
+     - 🔴 **Alerta 1**: Queda de Cliente Top 20
+     - 🟡 **Alerta 2**: Burn Rate Negativo Consecutivo
+     - 🔵 **Alerta 3**: Margem SPC Abaixo do Limite
+
+3. **Visualizar Sistema de Alertas Completo**:
+   - Acesse [alerts.html](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/alerts.html)
+   - Veja as regras detalhadas de cada alerta
+   - Visualize o histórico de alertas simulado
+   - Teste cada alerta individualmente
+
+### Funcionalidades do Ambiente de Testes
+
+✅ **Dashboard Interativo**: Visualização dos 3 painéis principais (A, B, C)  
+✅ **Simulação de Alertas**: Testes em tempo real com notificações visuais  
+✅ **Documentação Integrada**: Acesso direto às especificações técnicas  
+✅ **Histórico de Alertas**: Exemplo de log de alertas disparados  
+✅ **Detalhes por Alerta**: Condições, ações, destinatários e frequências  
+
+### Para Implementação Real
+
+Para implementar o sistema de alertas com WhatsApp e e-mail reais:
+1. Configure o Power Automate conforme [SISTEMA_ALERTAS.md](./SISTEMA_ALERTAS.md)
+2. Integre com Twilio WhatsApp API
+3. Configure os destinatários e números de contato
+4. Ajuste as frequências de verificação conforme necessidade
+
+---
+
 ## 🛠️ Stack Tecnológica
 
 ### Camada de Dados
@@ -286,6 +336,54 @@ Para dúvidas sobre a implementação:
 
 ---
 
+## 🚀 Deployment (GitHub Pages)
+
+### Sistema Online
+
+O sistema está publicado e acessível via GitHub Pages:
+- **URL Principal**: https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/
+- **Deploy Automático**: Configurado via GitHub Actions
+
+### Como Funciona
+
+1. **GitHub Actions Workflow**: Automaticamente deploy na branch `main` ou `copilot/deploy-github-pages`
+2. **Conteúdo Estático**: Dashboard HTML/CSS/JS para demonstração
+3. **Simulação de Alertas**: Interface de testes sem necessidade de backend
+4. **Atualização Contínua**: Cada push na branch deploy automaticamente
+
+### Estrutura de Arquivos para GitHub Pages
+
+```
+/
+├── index.html              # Dashboard principal
+├── alerts.html             # Sistema de alertas
+├── webapp/
+│   └── static/
+│       ├── css/
+│       │   └── style.css   # Estilos do sistema
+│       └── js/
+│           └── script.js   # Scripts interativos
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml # Workflow de deployment
+└── *.md                    # Documentação
+```
+
+### Para Desenvolvedores
+
+Para testar localmente antes do deploy:
+```bash
+# Servir localmente com Python
+python -m http.server 8000
+
+# Ou com Node.js
+npx http-server -p 8000
+
+# Acessar em: http://localhost:8000
+```
+
+---
+
 ## 📄 Licença
 
 MIT License - Ver arquivo [LICENSE](./LICENSE)
@@ -305,12 +403,21 @@ MIT License - Ver arquivo [LICENSE](./LICENSE)
 
 ## ✅ Próximos Passos
 
+### Para Demonstração e Testes
+1. ✅ **Sistema Online**: Acessar [https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/)
+2. ✅ **Testar Alertas**: Usar o painel de testes no dashboard principal
+3. ✅ **Revisar Documentação**: Ler especificações completas em [SISTEMA_ALERTAS.md](./SISTEMA_ALERTAS.md)
+4. ⬜ **Feedback**: Coletar impressões da Diretoria e Gerentes sobre o sistema
+
+### Para Implementação Produtiva
 1. ✅ Ler esta documentação completa
-2. ⬜ Aprovar orçamento e cronograma
+2. ⬜ Aprovar orçamento e cronograma (ver custos detalhados acima)
 3. ⬜ Designar Analista BI responsável
-4. ⬜ Iniciar Fase 1 (Semana de Preparação)
-5. ⬜ Acompanhar progresso semanal
-6. ⬜ Celebrar o Go-Live! 🎉
+4. ⬜ Iniciar Fase 1 (Semana de Preparação) - seguir [ROTEIRO_IMPLEMENTACAO.md](./ROTEIRO_IMPLEMENTACAO.md)
+5. ⬜ Configurar alertas reais com WhatsApp/E-mail
+6. ⬜ Integrar com dados reais do ERP
+7. ⬜ Acompanhar progresso semanal
+8. ⬜ Celebrar o Go-Live produtivo! 🎉
 
 ---
 

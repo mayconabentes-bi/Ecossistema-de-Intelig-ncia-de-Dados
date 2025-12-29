@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Alertas - CDL Manaus</title>
+    <link rel="stylesheet" href="webapp/static/css/style.css">
+    <style>
+        .alerts-hero {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .alerts-hero h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        .alert-rule-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .alert-rule-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        .alert-icon {
+            font-size: 3rem;
+        }
+        .alert-rule-title h3 {
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+        .alert-code {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+        .alert-details {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .alert-detail-section {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .alert-detail-section h4 {
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+        .alert-condition {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        .alert-action {
+            background: #d4edda;
+            border-left: 4px solid #27ae60;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        .test-alert-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+        .test-alert-btn:hover {
+            background: #2980b9;
+        }
+        .alert-recipients {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .recipient-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .recipient-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+        .recipient-role {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+        .recipient-contact {
+            font-size: 0.85rem;
+            color: #3498db;
+        }
+        .frequency-badge {
+            display: inline-block;
+            background: #e8f4f8;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .log-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .log-table th,
+        .log-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .log-table th {
+            background: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+        .log-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-critical { background: #e74c3c; color: white; }
+        .status-warning { background: #f39c12; color: white; }
+        .status-resolved { background: #27ae60; color: white; }
+        .status-pending { background: #95a5a6; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>🏢 CDL Manaus</h1>
+                    <p class="subtitle">Ecossistema de Inteligência de Dados</p>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="alerts.html">Sistema de Alertas</a></li>
+                    <li><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank">Documentação</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="alerts-hero">
+            <h2>🔔 Sistema de Alertas Automáticos</h2>
+            <p style="color: #7f8c8d; font-size: 1.1rem;">Notificações inteligentes para decisão estratégica</p>
+        </section>
+
+        <!-- Alert Rule 1 -->
+        <div class="alert-rule-card">
+            <div class="alert-rule-header">
+                <div class="alert-icon">🔴</div>
+                <div class="alert-rule-title">
+                    <h3>Alerta 1: Queda Crítica de Cliente Top 20</h3>
+                    <p class="alert-code">ALERT_001_QUEDA_CLIENTE_TOP20</p>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="alert-detail-section">
+                    <h4>📋 Condição de Disparo</h4>
+                    <div class="alert-condition">
+                        <p><strong>SE:</strong> Cliente pertence ao Top 20 (últimos 12 meses)</p>
+                        <p><strong>E:</strong> Faturamento da semana atual &lt; (Média últimas 4 semanas - 10%)</p>
+                        <p><strong>ENTÃO:</strong> Disparar alerta VERMELHO 🔴</p>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>⚡ Ação Automatizada</h4>
+                    <div class="alert-action">
+                        <p><strong>Canal:</strong> WhatsApp + E-mail</p>
+                        <p><strong>Prazo de Ação:</strong> 48 horas</p>
+                        <p><strong>Ação Requerida:</strong> Agendar reunião com cliente para entender motivo da redução</p>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>👥 Destinatários</h4>
+                    <div class="alert-recipients">
+                        <div class="recipient-card">
+                            <div class="recipient-name">João Silva</div>
+                            <div class="recipient-role">Diretor Comercial</div>
+                            <div class="recipient-contact">📱 +55 92 99999-1234</div>
+                        </div>
+                        <div class="recipient-card">
+                            <div class="recipient-name">Maria Santos</div>
+                            <div class="recipient-role">Gerente Relacionamento</div>
+                            <div class="recipient-contact">📱 +55 92 99999-5678</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>⏰ Frequência de Verificação</h4>
+                    <span class="frequency-badge">🕐 A cada 2 horas (8h-18h) | Segunda a Sexta</span>
+                </div>
+            </div>
+
+            <button class="test-alert-btn" onclick="window.location.href='index.html#test-alert1';">
+                🧪 Testar Este Alerta
+            </button>
+        </div>
+
+        <!-- Alert Rule 2 -->
+        <div class="alert-rule-card">
+            <div class="alert-rule-header">
+                <div class="alert-icon">🟡</div>
+                <div class="alert-rule-title">
+                    <h3>Alerta 2: Burn Rate Negativo Consecutivo</h3>
+                    <p class="alert-code">ALERT_002_BURN_RATE_NEGATIVO</p>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="alert-detail-section">
+                    <h4>📋 Condição de Disparo</h4>
+                    <div class="alert-condition">
+                        <p><strong>SE:</strong> Burn Rate Líquido &lt; 0 (negativo)</p>
+                        <p><strong>E:</strong> Burn Rate Líquido do mês anterior &lt; 0 (negativo)</p>
+                        <p><strong>ENTÃO:</strong> Disparar alerta VERMELHO 🔴</p>
+                        <p style="margin-top: 0.5rem; font-style: italic;">* 2 meses consecutivos indica problema estrutural de receita</p>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>⚡ Ação Automatizada</h4>
+                    <div class="alert-action">
+                        <p><strong>Canal:</strong> WhatsApp + E-mail (Prioridade CRÍTICA)</p>
+                        <p><strong>Prazo de Ação:</strong> 24 horas</p>
+                        <p><strong>Ação Requerida:</strong> Reunião emergencial da Diretoria e plano de contingência</p>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>👥 Destinatários</h4>
+                    <div class="alert-recipients">
+                        <div class="recipient-card">
+                            <div class="recipient-name">Carlos Oliveira</div>
+                            <div class="recipient-role">Diretor Presidente</div>
+                            <div class="recipient-contact">📱 +55 92 99999-9012</div>
+                        </div>
+                        <div class="recipient-card">
+                            <div class="recipient-name">Ana Costa</div>
+                            <div class="recipient-role">Diretora Financeira</div>
+                            <div class="recipient-contact">📱 +55 92 99999-3456</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>⏰ Frequência de Verificação</h4>
+                    <span class="frequency-badge">📅 Dia 1 de cada mês, às 9h (após fechamento)</span>
+                </div>
+            </div>
+
+            <button class="test-alert-btn" onclick="window.location.href='index.html#test-alert2';">
+                🧪 Testar Este Alerta
+            </button>
+        </div>
+
+        <!-- Alert Rule 3 -->
+        <div class="alert-rule-card">
+            <div class="alert-rule-header">
+                <div class="alert-icon">🔵</div>
+                <div class="alert-rule-title">
+                    <h3>Alerta 3: Margem SPC Abaixo do Limite</h3>
+                    <p class="alert-code">ALERT_003_MARGEM_SPC_BAIXA</p>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="alert-detail-section">
+                    <h4>📋 Condição de Disparo</h4>
+                    <div class="alert-condition">
+                        <p><strong>SE:</strong> Margem de Contribuição SPC &lt; 60%</p>
+                        <p><strong>ENTÃO:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Alerta AMARELO 🟡 (se 55% ≤ Margem &lt; 60%)</li>
+                            <li>Alerta VERMELHO 🔴 (se Margem &lt; 55%)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>⚡ Ação Automatizada</h4>
+                    <div class="alert-action">
+                        <p><strong>Canal:</strong> WhatsApp + E-mail</p>
+                        <p><strong>Prazo de Ação:</strong> 72 horas</p>
+                        <p><strong>Ação Requerida:</strong> Renegociar tarifa com fornecedor e revisar precificação</p>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>👥 Destinatários</h4>
+                    <div class="alert-recipients">
+                        <div class="recipient-card">
+                            <div class="recipient-name">Ana Costa</div>
+                            <div class="recipient-role">Diretora Financeira</div>
+                            <div class="recipient-contact">📱 +55 92 99999-3456</div>
+                        </div>
+                        <div class="recipient-card">
+                            <div class="recipient-name">Pedro Alves</div>
+                            <div class="recipient-role">Diretor de Operações</div>
+                            <div class="recipient-contact">📱 +55 92 99999-7890</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-detail-section">
+                    <h4>⏰ Frequência de Verificação</h4>
+                    <span class="frequency-badge">🕔 Diariamente às 17h | Segunda a Sexta</span>
+                </div>
+            </div>
+
+            <button class="test-alert-btn" onclick="window.location.href='index.html#test-alert3';">
+                🧪 Testar Este Alerta
+            </button>
+        </div>
+
+        <!-- Alert Log -->
+        <div class="log-section">
+            <h3>📊 Histórico de Alertas (Simulação)</h3>
+            <p style="color: #7f8c8d; margin-bottom: 1rem;">Últimos alertas disparados pelo sistema</p>
+            
+            <div class="table-responsive">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Alerta</th>
+                            <th>Status</th>
+                            <th>Destinatários</th>
+                            <th>Tempo Resposta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>29/12/2025 14:32</td>
+                            <td>Queda Cliente Top 20 - Bemol S.A.</td>
+                            <td><span class="status-badge status-resolved">Resolvido</span></td>
+                            <td>João Silva, Maria Santos</td>
+                            <td>18 horas</td>
+                        </tr>
+                        <tr>
+                            <td>28/12/2025 17:00</td>
+                            <td>Margem SPC Baixa (57,2%)</td>
+                            <td><span class="status-badge status-pending">Em andamento</span></td>
+                            <td>Ana Costa, Pedro Alves</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>01/12/2025 09:00</td>
+                            <td>Burn Rate Negativo Consecutivo</td>
+                            <td><span class="status-badge status-critical">Crítico</span></td>
+                            <td>Diretoria completa</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>25/11/2025 12:15</td>
+                            <td>Queda Cliente Top 20 - Lojas Americanas</td>
+                            <td><span class="status-badge status-resolved">Resolvido</span></td>
+                            <td>João Silva</td>
+                            <td>36 horas</td>
+                        </tr>
+                        <tr>
+                            <td>15/11/2025 17:00</td>
+                            <td>Margem SPC Baixa (58,5%)</td>
+                            <td><span class="status-badge status-resolved">Resolvido</span></td>
+                            <td>Ana Costa, Pedro Alves</td>
+                            <td>48 horas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Implementation Info -->
+        <div class="info-section" style="margin-top: 2rem;">
+            <h3>🛠️ Implementação Técnica</h3>
+            <p>O Sistema de Alertas utiliza três camadas principais:</p>
+            <ul>
+                <li><strong>Camada de Dados:</strong> Power BI Dataset / SQL Database com verificações automáticas</li>
+                <li><strong>Motor de Alertas:</strong> Power Automate (Flow) para verificação de condições e lógica de disparo</li>
+                <li><strong>Canais de Notificação:</strong> WhatsApp Business API (Twilio) + E-mail (Office 365)</li>
+            </ul>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #e8f4f8; border-radius: 5px; border-left: 4px solid #3498db;">
+                <p><strong>💰 Custo Operacional:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>Power Automate: R$ 0-50/mês (incluído no Microsoft 365)</li>
+                    <li>WhatsApp API (Twilio): ~R$ 100/mês (1.000 mensagens)</li>
+                    <li><strong>Total: R$ 150/mês</strong></li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <p><strong>📚 Documentação Completa:</strong> Para detalhes sobre implementação, lógica SQL e templates de mensagens, consulte o arquivo <a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados/blob/main/SISTEMA_ALERTAS.md" target="_blank" style="color: #3498db; font-weight: bold;">SISTEMA_ALERTAS.md</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CDL Manaus - Todos os direitos reservados</p>
+            <p class="footer-info">Sistema de Business Intelligence em Tempo Real | Versão Online via GitHub Pages</p>
+        </div>
+    </footer>
+</body>
+</html>

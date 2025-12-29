@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CDL Manaus - Ecossistema de Inteligência de Dados</title>
+    <link rel="stylesheet" href="webapp/static/css/style.css">
+    <style>
+        /* Additional styles for static version */
+        .test-alert-banner {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+        .test-controls {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .test-controls h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .test-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .test-btn-alert1 { background: #e74c3c; }
+        .test-btn-alert1:hover { background: #c0392b; }
+        .test-btn-alert2 { background: #f39c12; }
+        .test-btn-alert2:hover { background: #e67e22; }
+        .test-btn-alert3 { background: #3498db; }
+        .test-btn-alert3:hover { background: #2980b9; }
+        .alert-simulation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            max-width: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            padding: 1.5rem;
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .alert-simulation.show {
+            display: block;
+        }
+        .alert-simulation .close-alert {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #95a5a6;
+        }
+        .alert-simulation h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .alert-simulation p {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        .alert-simulation .alert-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .alert-type.critical { background: #e74c3c; color: white; }
+        .alert-type.warning { background: #f39c12; color: white; }
+        .alert-type.info { background: #3498db; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>🏢 CDL Manaus</h1>
+                    <p class="subtitle">Ecossistema de Inteligência de Dados</p>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="alerts.html">Sistema de Alertas</a></li>
+                    <li><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank">Documentação</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="test-alert-banner">
+            🚀 SISTEMA ONLINE VIA GITHUB PAGES - AMBIENTE DE TESTES E DEMONSTRAÇÃO
+        </div>
+
+        <section class="hero">
+            <h2>📊 Dashboard de Visualização de Dados</h2>
+            <p class="hero-subtitle">Monitoramento em tempo real dos indicadores estratégicos</p>
+        </section>
+
+        <div class="test-controls">
+            <h3>🧪 Painel de Testes de Alertas</h3>
+            <p style="margin-bottom: 1rem; color: #7f8c8d;">Clique nos botões abaixo para simular os alertas do sistema:</p>
+            <div class="test-buttons">
+                <button class="test-btn test-btn-alert1" onclick="testAlert1()">
+                    🔴 Testar Alerta 1: Queda Cliente Top 20
+                </button>
+                <button class="test-btn test-btn-alert2" onclick="testAlert2()">
+                    🟡 Testar Alerta 2: Burn Rate Negativo
+                </button>
+                <button class="test-btn test-btn-alert3" onclick="testAlert3()">
+                    🔵 Testar Alerta 3: Margem SPC Baixa
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Painel A: O Pulmão (Financeiro) -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>🫁 Painel A: O Pulmão</h3>
+                    <span class="panel-subtitle">Financeiro / Caixa</span>
+                </div>
+                <div class="panel-content">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Saldo de Caixa</div>
+                            <div class="kpi-value" id="saldo-caixa">R$ 1.250.000</div>
+                            <div class="kpi-change positive">+5,2% vs mês anterior</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">IAR</div>
+                            <div class="kpi-value" id="iar">1.01</div>
+                            <div class="kpi-change neutral">Índice de Arrecadação Real</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Burn Rate</div>
+                            <div class="kpi-value negative" id="burn-rate">R$ -83.923</div>
+                            <div class="kpi-change negative">Nov/2025</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Estoque Suspensos</div>
+                            <div class="kpi-value warning" id="suspensos">R$ 742.779</div>
+                            <div class="kpi-change warning">Requer atenção</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel B: O Motor (Comercial) -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>⚙️ Painel B: O Motor</h3>
+                    <span class="panel-subtitle">Comercial / Carteira</span>
+                </div>
+                <div class="panel-content">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">ICIO (Top 20)</div>
+                            <div class="kpi-value" id="icio">45%</div>
+                            <div class="kpi-change neutral">Índice de Concentração</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Churn Real</div>
+                            <div class="kpi-value" id="churn">3.2%</div>
+                            <div class="kpi-change positive">Abaixo da meta</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">IRR</div>
+                            <div class="kpi-value" id="irr">70/30</div>
+                            <div class="kpi-change neutral">Recorrente/Variável</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Clientes Ativos</div>
+                            <div class="kpi-value" id="entries">1.247</div>
+                            <div class="kpi-change positive">+23 este mês</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Painel C: A Máquina (Produtos) -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>🏭 Painel C: A Máquina</h3>
+                    <span class="panel-subtitle">Produtos / Margem</span>
+                </div>
+                <div class="panel-content">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Margem SPC</div>
+                            <div class="kpi-value positive" id="margem-spc">62.3%</div>
+                            <div class="kpi-change positive">Acima da meta (60%)</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Certificado Digital</div>
+                            <div class="kpi-value warning" id="cert-digital">23%</div>
+                            <div class="kpi-change warning">Margem baixa</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Receita Mensal</div>
+                            <div class="kpi-value" id="receita">R$ 850.000</div>
+                            <div class="kpi-change positive">+8,5% vs mês anterior</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Custo Variável</div>
+                            <div class="kpi-value" id="custo">R$ 320.500</div>
+                            <div class="kpi-change neutral">37,7% da receita</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>📋 Sobre o Sistema</h3>
+            <p>Este dashboard apresenta uma visão consolidada dos principais indicadores do Ecossistema de Inteligência de Dados da CDL Manaus.</p>
+            <ul>
+                <li><strong>Painel A (O Pulmão):</strong> Monitora a saúde financeira e fluxo de caixa</li>
+                <li><strong>Painel B (O Motor):</strong> Acompanha a carteira de clientes e receita comercial</li>
+                <li><strong>Painel C (A Máquina):</strong> Analisa a rentabilidade e margem por produto</li>
+            </ul>
+            <p class="access-info">
+                <strong>Sistema de Testes:</strong> Este é um ambiente de demonstração. Use o painel de testes acima para simular alertas do sistema. Para mais informações, consulte a <a href="alerts.html">página de Sistema de Alertas</a> ou a <a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados/blob/main/SISTEMA_ALERTAS.md" target="_blank">documentação completa</a>.
+            </p>
+        </div>
+
+        <!-- Alert Simulation Container -->
+        <div id="alertSimulation" class="alert-simulation">
+            <button class="close-alert" onclick="closeAlert()">&times;</button>
+            <div id="alertContent"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 CDL Manaus - Todos os direitos reservados</p>
+            <p class="footer-info">Sistema de Business Intelligence em Tempo Real | Versão Online via GitHub Pages</p>
+        </div>
+    </footer>
+
+    <script>
+        function testAlert1() {
+            const content = `
+                <h4>🔴 ALERTA CRÍTICO</h4>
+                <span class="alert-type critical">Alerta 1: Queda Cliente Top 20</span>
+                <p><strong>Cliente:</strong> Bemol S.A.</p>
+                <p><strong>Queda:</strong> -25,3% vs. média 4 semanas</p>
+                <p><strong>📊 Dados:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Média 4 semanas: R$ 42.500</li>
+                    <li>Semana atual: R$ 31.745</li>
+                    <li>Diferença: -R$ 10.755</li>
+                </ul>
+                <p><strong>⚠️ AÇÃO RECOMENDADA:</strong></p>
+                <p>Agendar reunião com cliente nas próximas 48h para entender motivo da redução.</p>
+                <p style="margin-top: 1rem; color: #7f8c8d; font-size: 0.85rem;">📅 ${new Date().toLocaleString('pt-BR')}</p>
+            `;
+            showAlert(content);
+        }
+
+        function testAlert2() {
+            const content = `
+                <h4>🟡 ALERTA CRÍTICO</h4>
+                <span class="alert-type warning">Alerta 2: Burn Rate Negativo</span>
+                <p><strong>⚠️ Situação:</strong> Queimando caixa por 2 meses consecutivos</p>
+                <p><strong>📊 Dados:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Out/2025: -R$ 45.200</li>
+                    <li>Nov/2025: -R$ 83.923</li>
+                    <li>Total queimado: -R$ 129.123</li>
+                </ul>
+                <p><strong>💡 Projeção:</strong></p>
+                <p>Se mantiver ritmo, caixa zerado em: Abril/2026</p>
+                <p><strong>🚨 AÇÃO IMEDIATA NECESSÁRIA:</strong></p>
+                <ol style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Reunião emergencial Diretoria (24h)</li>
+                    <li>Plano de contingência: cortar despesas não-essenciais</li>
+                    <li>Intensificar cobrança e rever precificação</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #7f8c8d; font-size: 0.85rem;">📅 ${new Date().toLocaleString('pt-BR')}</p>
+            `;
+            showAlert(content);
+        }
+
+        function testAlert3() {
+            const content = `
+                <h4>🔵 ALERTA DE ATENÇÃO</h4>
+                <span class="alert-type info">Alerta 3: Margem SPC Abaixo da Meta</span>
+                <p><strong>⚠️ Margem SPC:</strong> 57,2% (Meta: >60%)</p>
+                <p><strong>📊 Dados Nov/2025:</strong></p>
+                <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Receita SPC: R$ 650.000</li>
+                    <li>Custo SPC: R$ 278.280</li>
+                    <li>Margem: 57,2%</li>
+                </ul>
+                <p><strong>💡 AÇÕES RECOMENDADAS (Priorizar):</strong></p>
+                <ol style="margin-left: 1.5rem; margin-bottom: 1rem;">
+                    <li>Renegociar tarifa com fornecedor SPC</li>
+                    <li>Revisar precificação (aumento de 5-10%)</li>
+                    <li>Reduzir custo por consulta (volume)</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #7f8c8d; font-size: 0.85rem;">📅 ${new Date().toLocaleString('pt-BR')}</p>
+            `;
+            showAlert(content);
+        }
+
+        function showAlert(content) {
+            const alertBox = document.getElementById('alertSimulation');
+            const alertContent = document.getElementById('alertContent');
+            alertContent.innerHTML = content;
+            alertBox.classList.add('show');
+            
+            // Auto-close after 10 seconds
+            setTimeout(() => {
+                closeAlert();
+            }, 10000);
+        }
+
+        function closeAlert() {
+            const alertBox = document.getElementById('alertSimulation');
+            alertBox.classList.remove('show');
+        }
+
+        // Simulate real-time data updates
+        function updateKPIs() {
+            // This would normally fetch from an API
+            // For demo purposes, we'll just add visual feedback
+            console.log('Dashboard carregado - ' + new Date().toLocaleString('pt-BR'));
+        }
+
+        // Initialize
+        updateKPIs();
+        
+        // Update every 30 seconds (demonstration)
+        setInterval(updateKPIs, 30000);
+
+        // Handle hash parameters from alerts.html links
+        window.addEventListener('load', () => {
+            const hash = window.location.hash;
+            if (hash === '#test-alert1') {
+                setTimeout(() => testAlert1(), 500);
+            } else if (hash === '#test-alert2') {
+                setTimeout(() => testAlert2(), 500);
+            } else if (hash === '#test-alert3') {
+                setTimeout(() => testAlert3(), 500);
+            }
+        });
+    </script>
+</body>
+</html>
