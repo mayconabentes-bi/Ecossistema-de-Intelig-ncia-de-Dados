@@ -123,23 +123,24 @@ class BiasDetector:
                     )
         
         # Check for missing historical data
-        unique_clients = df[client_column].nunique()
-        total_records = len(df)
-        
-        if total_records > 0 and unique_clients > 0:
-            avg_records_per_client = total_records / unique_clients
+        if client_column in df.columns:
+            unique_clients = df[client_column].nunique()
+            total_records = len(df)
             
-            if avg_records_per_client < 3:
-                result['bias_detected'] = True
-                result['severity'] = 'MEDIUM'
+            if total_records > 0 and unique_clients > 0:
+                avg_records_per_client = total_records / unique_clients
                 
-                self.log_bias(
-                    bias_type='Survivorship Bias (Data Sparsity)',
-                    severity='MEDIUM',
-                    description=f"Limited historical data: average {avg_records_per_client:.1f} records per client.",
-                    recommendation="Collect more historical data to identify patterns in client lifecycle.",
-                    metadata={'avg_records_per_client': avg_records_per_client}
-                )
+                if avg_records_per_client < 3:
+                    result['bias_detected'] = True
+                    result['severity'] = 'MEDIUM'
+                    
+                    self.log_bias(
+                        bias_type='Survivorship Bias (Data Sparsity)',
+                        severity='MEDIUM',
+                        description=f"Limited historical data: average {avg_records_per_client:.1f} records per client.",
+                        recommendation="Collect more historical data to identify patterns in client lifecycle.",
+                        metadata={'avg_records_per_client': avg_records_per_client}
+                    )
         
         return result
     
