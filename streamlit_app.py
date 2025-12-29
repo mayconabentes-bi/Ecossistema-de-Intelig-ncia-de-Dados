@@ -75,7 +75,10 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        st.image("https://via.placeholder.com/150x50/1f77b4/ffffff?text=CDL+Manaus", use_column_width=True)
+        # Display logo section (can be replaced with actual logo file)
+        st.markdown("### 📊 CDL Manaus")
+        st.markdown("**Intelligence Hub**")
+        st.markdown("---")
         st.title("🎯 Navigation")
         
         page = st.radio(
@@ -231,7 +234,12 @@ def show_dashboard(processor: DataProcessor):
     st.subheader("📋 Detailed Monthly Data")
     
     display_df = df.copy()
-    display_df['Mes'] = display_df['Mes'].dt.strftime('%Y-%m')
+    # Safely convert datetime to string format
+    try:
+        display_df['Mes'] = pd.to_datetime(display_df['Mes']).dt.strftime('%Y-%m')
+    except Exception:
+        display_df['Mes'] = display_df['Mes'].astype(str)
+    
     display_df['Gap (%)'] = ((display_df['Faturamento_Real'] - display_df['Faturamento_Meta']) / 
                               display_df['Faturamento_Meta'] * 100)
     

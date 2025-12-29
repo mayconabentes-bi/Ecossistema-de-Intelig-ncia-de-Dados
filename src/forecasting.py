@@ -137,6 +137,9 @@ class BillingForecaster:
             # Calculate historical mean for baseline comparison
             historical_mean = series.mean()
             
+            # Extract confidence intervals safely
+            ci_lower, ci_upper = self._extract_confidence_intervals(conf_int)
+            
             # Build result
             result = {
                 'method': 'ARIMA',
@@ -145,8 +148,8 @@ class BillingForecaster:
                 'forecast_periods': periods,
                 'predictions': forecast.tolist(),
                 'prediction_dezembro': float(forecast[0]) if periods >= 1 else None,
-                'confidence_interval_lower': conf_int.iloc[:, 0].tolist() if hasattr(conf_int, 'iloc') else [float(conf_int[0, 0])],
-                'confidence_interval_upper': conf_int.iloc[:, 1].tolist() if hasattr(conf_int, 'iloc') else [float(conf_int[0, 1])],
+                'confidence_interval_lower': ci_lower,
+                'confidence_interval_upper': ci_upper,
                 'historical_mean': float(historical_mean),
                 'model_summary': str(self.model.summary())
             }
@@ -240,6 +243,35 @@ class BillingForecaster:
         
         logger.info(f"Trend forecast: December 2025 = R$ {result['prediction_dezembro']:,.2f}")
         return result
+    
+    def _extract_confidence_intervals(self, conf_int) -> Tuple[List[float], List[float]]:
+        """
+        Safely extract confidence interval bounds from various formats.
+        
+        Args:
+            conf_int: Confidence interval object (DataFrame, ndarray, etc.)
+            
+        Returns:
+            Tuple of (lower_bounds, upper_bounds) as lists
+        """
+        try:
+            if hasattr(conf_int, 'iloc'):
+                # DataFrame format
+                ci_lower = conf_int.iloc[:, 0].tolist()
+                ci_upper = conf_int.iloc[:, 1].tolist()
+            elif hasattr(conf_int, 'shape') and len(conf_int.shape) == 2:
+                # NumPy array format
+                ci_lower = conf_int[:, 0].tolist()
+                ci_upper = conf_int[:, 1].tolist()
+            else:
+                # Fallback for unexpected formats
+                ci_lower = [float(conf_int[0, 0])]
+                ci_upper = [float(conf_int[0, 1])]
+            return ci_lower, ci_upper
+        except Exception as e:
+            logger.warning(f"Error extracting confidence intervals: {e}. Using default values.")
+            # Return empty confidence intervals as fallback
+            return [0.0], [0.0]
     
     def get_forecast_summary(self) -> str:
         """
