@@ -1,5 +1,32 @@
 # Ecossistema de Inteligência de Dados - CDL Manaus
 
+## 🎯 NOVO: Intelligence Hub com Streamlit
+
+**Sistema de processamento de dados e forecasting ARIMA agora disponível!**
+
+### 🚀 Quick Start - Intelligence Hub
+
+```bash
+# 1. Instalar dependências
+pip install -r requirements.txt
+
+# 2. Executar dashboard Streamlit
+streamlit run streamlit_app.py
+
+# 3. Acessar no navegador: http://localhost:8501
+```
+
+**Funcionalidades:**
+- ✅ **Dashboard Overview**: KPIs em tempo real (R$ 13,098,238 acumulados)
+- ✅ **Forecasting ARIMA**: Previsão Dezembro 2025 com intervalos de confiança
+- ✅ **BCG Matrix**: Classificação automática de produtos (Stars, Cash Cows, Dogs)
+- ✅ **Bias Detection**: Monitoramento de Viés de Sobrevivência e Seleção
+- ✅ **Scenario Simulator**: Análise "E se?" interativa
+
+📚 **Documentação Completa**: [INTELLIGENCE_HUB_README.md](./INTELLIGENCE_HUB_README.md)
+
+---
+
 ## 🚀 Sistema Online via GitHub Pages
 
 **[👉 ACESSAR SISTEMA ONLINE](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/)**
