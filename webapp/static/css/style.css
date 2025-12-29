@@ -615,7 +615,7 @@ footer {
 button,
 .btn,
 a {
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
 button:focus,
@@ -753,8 +753,8 @@ a:focus {
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
+        animation-duration: 0s !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        transition-duration: 0s !important;
     }
 }
