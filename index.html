@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard de Business Intelligence em Tempo Real para CDL Manaus. Monitore indicadores financeiros, comerciais e de produtos com alertas automatizados.">
+    <meta name="keywords" content="BI, Business Intelligence, Dashboard, CDL Manaus, Gestão de Dados, KPIs">
     <title>Dashboard - CDL Manaus - Ecossistema de Inteligência de Dados</title>
     <link rel="stylesheet" href="webapp/static/css/style.css">
     <style>
@@ -40,6 +42,10 @@
             cursor: pointer;
             transition: all 0.3s;
             color: white;
+        }
+        .test-btn:focus {
+            outline: 3px solid #ffa500;
+            outline-offset: 2px;
         }
         .test-btn-alert1 { background: #e74c3c; }
         .test-btn-alert1:hover { background: #c0392b; }
@@ -83,6 +89,58 @@
             cursor: pointer;
             color: #95a5a6;
         }
+        .alert-simulation .close-alert:focus {
+            outline: 3px solid #ffa500;
+            outline-offset: 2px;
+        }
+        .skip-to-content {
+            position: absolute;
+            left: -9999px;
+            z-index: 999;
+            padding: 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+        }
+        .skip-to-content:focus {
+            left: 50%;
+            transform: translateX(-50%);
+            top: 1rem;
+        }
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--primary-color);
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .nav-menu.active {
+                display: flex;
+            }
+            .mobile-menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.5rem;
+            }
+            .mobile-menu-toggle:focus {
+                outline: 3px solid #ffa500;
+                outline-offset: 2px;
+            }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
         .alert-simulation h4 {
             margin-bottom: 1rem;
             font-size: 1.2rem;
@@ -105,24 +163,34 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
+    <!-- Skip to content link for keyboard navigation -->
+    <a href="#main-content" class="skip-to-content">Pular para o conteúdo principal</a>
+    
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Navegação principal">
             <div class="container">
                 <div class="logo">
                     <h1>🏢 CDL Manaus</h1>
                     <p class="subtitle">Ecossistema de Inteligência de Dados</p>
                 </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html">Dashboard</a></li>
-                    <li><a href="alerts.html">Sistema de Alertas</a></li>
-                    <li><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank">Documentação</a></li>
+                <button class="mobile-menu-toggle" 
+                        aria-label="Menu de navegação" 
+                        aria-expanded="false"
+                        aria-controls="main-nav"
+                        onclick="toggleMobileMenu()">
+                    ☰
+                </button>
+                <ul class="nav-menu" id="main-nav" role="menu">
+                    <li role="none"><a href="index.html" role="menuitem" aria-current="page">Dashboard</a></li>
+                    <li role="none"><a href="alerts.html" role="menuitem">Sistema de Alertas</a></li>
+                    <li role="none"><a href="https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados" target="_blank" rel="noopener noreferrer" role="menuitem" aria-label="Documentação (abre em nova aba)">Documentação</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <main class="container">
-        <div class="test-alert-banner">
+    <main class="container" id="main-content" role="main">
+        <div class="test-alert-banner" role="banner" aria-label="Aviso do sistema">
             🚀 SISTEMA ONLINE VIA GITHUB PAGES - AMBIENTE DE TESTES E DEMONSTRAÇÃO
         </div>
 
@@ -149,118 +217,127 @@
             <p class="hero-subtitle">Monitoramento em tempo real dos indicadores estratégicos</p>
         </section>
 
-        <div class="test-controls">
-            <h3>🧪 Painel de Testes de Alertas</h3>
+        <section class="test-controls" aria-labelledby="test-controls-title">
+            <h3 id="test-controls-title">🧪 Painel de Testes de Alertas</h3>
             <p style="margin-bottom: 1rem; color: #7f8c8d;">Clique nos botões abaixo para simular os alertas do sistema:</p>
-            <div class="test-buttons">
-                <button class="test-btn test-btn-alert1" onclick="testAlert1()">
+            <div class="test-buttons" role="group" aria-label="Botões de teste de alertas">
+                <button class="test-btn test-btn-alert1" 
+                        onclick="testAlert1()"
+                        aria-label="Testar Alerta 1: Queda de Cliente Top 20"
+                        title="Simula um alerta crítico de queda de faturamento de cliente importante">
                     🔴 Testar Alerta 1: Queda Cliente Top 20
                 </button>
-                <button class="test-btn test-btn-alert2" onclick="testAlert2()">
+                <button class="test-btn test-btn-alert2" 
+                        onclick="testAlert2()"
+                        aria-label="Testar Alerta 2: Burn Rate Negativo Consecutivo"
+                        title="Simula um alerta de queima de caixa por 2 meses consecutivos">
                     🟡 Testar Alerta 2: Burn Rate Negativo
                 </button>
-                <button class="test-btn test-btn-alert3" onclick="testAlert3()">
+                <button class="test-btn test-btn-alert3" 
+                        onclick="testAlert3()"
+                        aria-label="Testar Alerta 3: Margem SPC Abaixo da Meta"
+                        title="Simula um alerta de margem de contribuição abaixo do limite">
                     🔵 Testar Alerta 3: Margem SPC Baixa
                 </button>
             </div>
-        </div>
+        </section>
 
-        <div class="dashboard-grid">
+        <div class="dashboard-grid" role="region" aria-label="Painéis de indicadores">
             <!-- Painel A: O Pulmão (Financeiro) -->
-            <div class="panel">
+            <article class="panel" aria-labelledby="painel-a-title">
                 <div class="panel-header">
-                    <h3>🫁 Painel A: O Pulmão</h3>
+                    <h3 id="painel-a-title">🫁 Painel A: O Pulmão</h3>
                     <span class="panel-subtitle">Financeiro / Caixa</span>
                 </div>
                 <div class="panel-content">
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-label">Saldo de Caixa</div>
-                            <div class="kpi-value" id="saldo-caixa">R$ 1.250.000</div>
-                            <div class="kpi-change positive">+5,2% vs mês anterior</div>
+                    <div class="kpi-grid" role="list" aria-label="Indicadores financeiros">
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-saldo-caixa">Saldo de Caixa</div>
+                            <div class="kpi-value" id="saldo-caixa" aria-labelledby="label-saldo-caixa" aria-describedby="desc-saldo-caixa">R$ 1.250.000</div>
+                            <div class="kpi-change positive" id="desc-saldo-caixa">+5,2% vs mês anterior</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">IAR</div>
-                            <div class="kpi-value" id="iar">1.01</div>
-                            <div class="kpi-change neutral">Índice de Arrecadação Real</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-iar">IAR</div>
+                            <div class="kpi-value" id="iar" aria-labelledby="label-iar" aria-describedby="desc-iar" title="Índice de Arrecadação Real">1.01</div>
+                            <div class="kpi-change neutral" id="desc-iar">Índice de Arrecadação Real</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Burn Rate</div>
-                            <div class="kpi-value negative" id="burn-rate">R$ -83.923</div>
-                            <div class="kpi-change negative">Nov/2025</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-burn-rate">Burn Rate</div>
+                            <div class="kpi-value negative" id="burn-rate" aria-labelledby="label-burn-rate" aria-describedby="desc-burn-rate">R$ -83.923</div>
+                            <div class="kpi-change negative" id="desc-burn-rate">Nov/2025</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Estoque Suspensos</div>
-                            <div class="kpi-value warning" id="suspensos">R$ 742.779</div>
-                            <div class="kpi-change warning">Requer atenção</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-suspensos">Estoque Suspensos</div>
+                            <div class="kpi-value warning" id="suspensos" aria-labelledby="label-suspensos" aria-describedby="desc-suspensos">R$ 742.779</div>
+                            <div class="kpi-change warning" id="desc-suspensos">Requer atenção</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
 
             <!-- Painel B: O Motor (Comercial) -->
-            <div class="panel">
+            <article class="panel" aria-labelledby="painel-b-title">
                 <div class="panel-header">
-                    <h3>⚙️ Painel B: O Motor</h3>
+                    <h3 id="painel-b-title">⚙️ Painel B: O Motor</h3>
                     <span class="panel-subtitle">Comercial / Carteira</span>
                 </div>
                 <div class="panel-content">
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-label">ICIO (Top 20)</div>
-                            <div class="kpi-value" id="icio">45%</div>
-                            <div class="kpi-change neutral">Índice de Concentração</div>
+                    <div class="kpi-grid" role="list" aria-label="Indicadores comerciais">
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-icio">ICIO (Top 20)</div>
+                            <div class="kpi-value" id="icio" aria-labelledby="label-icio" aria-describedby="desc-icio" title="Índice de Concentração dos 20 maiores clientes">45%</div>
+                            <div class="kpi-change neutral" id="desc-icio">Índice de Concentração</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Churn Real</div>
-                            <div class="kpi-value" id="churn">3.2%</div>
-                            <div class="kpi-change positive">Abaixo da meta</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-churn">Churn Real</div>
+                            <div class="kpi-value" id="churn" aria-labelledby="label-churn" aria-describedby="desc-churn">3.2%</div>
+                            <div class="kpi-change positive" id="desc-churn">Abaixo da meta</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">IRR</div>
-                            <div class="kpi-value" id="irr">70/30</div>
-                            <div class="kpi-change neutral">Recorrente/Variável</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-irr">IRR</div>
+                            <div class="kpi-value" id="irr" aria-labelledby="label-irr" aria-describedby="desc-irr" title="Índice de Renovação de Receita">70/30</div>
+                            <div class="kpi-change neutral" id="desc-irr">Recorrente/Variável</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Clientes Ativos</div>
-                            <div class="kpi-value" id="entries">1.247</div>
-                            <div class="kpi-change positive">+23 este mês</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-entries">Clientes Ativos</div>
+                            <div class="kpi-value" id="entries" aria-labelledby="label-entries" aria-describedby="desc-entries">1.247</div>
+                            <div class="kpi-change positive" id="desc-entries">+23 este mês</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
 
             <!-- Painel C: A Máquina (Produtos) -->
-            <div class="panel">
+            <article class="panel" aria-labelledby="painel-c-title">
                 <div class="panel-header">
-                    <h3>🏭 Painel C: A Máquina</h3>
+                    <h3 id="painel-c-title">🏭 Painel C: A Máquina</h3>
                     <span class="panel-subtitle">Produtos / Margem</span>
                 </div>
                 <div class="panel-content">
-                    <div class="kpi-grid">
-                        <div class="kpi-card">
-                            <div class="kpi-label">Margem SPC</div>
-                            <div class="kpi-value positive" id="margem-spc">62.3%</div>
-                            <div class="kpi-change positive">Acima da meta (60%)</div>
+                    <div class="kpi-grid" role="list" aria-label="Indicadores de produtos">
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-margem-spc">Margem SPC</div>
+                            <div class="kpi-value positive" id="margem-spc" aria-labelledby="label-margem-spc" aria-describedby="desc-margem-spc">62.3%</div>
+                            <div class="kpi-change positive" id="desc-margem-spc">Acima da meta (60%)</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Certificado Digital</div>
-                            <div class="kpi-value warning" id="cert-digital">23%</div>
-                            <div class="kpi-change warning">Margem baixa</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-cert-digital">Certificado Digital</div>
+                            <div class="kpi-value warning" id="cert-digital" aria-labelledby="label-cert-digital" aria-describedby="desc-cert-digital">23%</div>
+                            <div class="kpi-change warning" id="desc-cert-digital">Margem baixa</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Receita Mensal</div>
-                            <div class="kpi-value" id="receita">R$ 850.000</div>
-                            <div class="kpi-change positive">+8,5% vs mês anterior</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-receita">Receita Mensal</div>
+                            <div class="kpi-value" id="receita" aria-labelledby="label-receita" aria-describedby="desc-receita">R$ 850.000</div>
+                            <div class="kpi-change positive" id="desc-receita">+8,5% vs mês anterior</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label">Custo Variável</div>
-                            <div class="kpi-value" id="custo">R$ 320.500</div>
-                            <div class="kpi-change neutral">37,7% da receita</div>
+                        <div class="kpi-card" role="listitem">
+                            <div class="kpi-label" id="label-custo">Custo Variável</div>
+                            <div class="kpi-value" id="custo" aria-labelledby="label-custo" aria-describedby="desc-custo">R$ 320.500</div>
+                            <div class="kpi-change neutral" id="desc-custo">37,7% da receita</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </article>
         </div>
 
         <div class="info-section">
@@ -291,13 +368,13 @@
         </div>
 
         <!-- Alert Simulation Container -->
-        <div id="alertSimulation" class="alert-simulation">
-            <button class="close-alert" onclick="closeAlert()">&times;</button>
+        <div id="alertSimulation" class="alert-simulation" role="alertdialog" aria-labelledby="alert-title" aria-describedby="alert-description" aria-live="assertive" aria-atomic="true">
+            <button class="close-alert" onclick="closeAlert()" aria-label="Fechar alerta">✕</button>
             <div id="alertContent"></div>
         </div>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="container">
             <p>&copy; 2025 CDL Manaus - Todos os direitos reservados</p>
             <p class="footer-info">Sistema de Business Intelligence em Tempo Real | Versão Online via GitHub Pages</p>
@@ -306,6 +383,35 @@
     </footer>
 
     <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('main-nav');
+            const button = document.querySelector('.mobile-menu-toggle');
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            
+            menu.classList.toggle('active');
+            button.setAttribute('aria-expanded', !isExpanded);
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('main-nav');
+            const button = document.querySelector('.mobile-menu-toggle');
+            const isClickInside = menu.contains(event.target) || button.contains(event.target);
+            
+            if (!isClickInside && menu.classList.contains('active')) {
+                menu.classList.remove('active');
+                button.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Keyboard navigation for alerts
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAlert();
+            }
+        });
+
         function testAlert1() {
             const content = `
                 <h4>🔴 ALERTA CRÍTICO</h4>
@@ -376,6 +482,14 @@
             const alertContent = document.getElementById('alertContent');
             alertContent.innerHTML = content;
             alertBox.classList.add('show');
+            
+            // Set focus to the close button for accessibility
+            setTimeout(() => {
+                const closeButton = alertBox.querySelector('.close-alert');
+                if (closeButton) {
+                    closeButton.focus();
+                }
+            }, 100);
             
             // Auto-close after 10 seconds
             setTimeout(() => {
