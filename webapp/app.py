@@ -71,7 +71,8 @@ def processar_csv_financeiro(filepath):
     """
     try:
         # Tentar ler CSV com encoding latin1 e pulando linhas de cabeçalho
-        # O sistema legado geralmente tem 4-5 linhas de lixo antes dos dados reais
+        # header=4: O sistema legado RESUMO EXECUTIVO tem 4 linhas de metadados/títulos
+        # antes do cabeçalho real da tabela (linha 5)
         df = pd.read_csv(filepath, encoding='latin1', header=4, on_bad_lines='skip')
         
         # Remover linhas completamente vazias
@@ -81,18 +82,15 @@ def processar_csv_financeiro(filepath):
         if df.empty:
             return False, "O arquivo CSV está vazio ou não contém dados válidos.", 0
         
-        # Conectar ao banco SQLite
-        conn = sqlite3.connect(DATABASE_FILE)
-        
-        # Adicionar metadados de importação
-        df['data_importacao'] = datetime.now().isoformat()
-        df['arquivo_origem'] = os.path.basename(filepath)
-        
-        # Salvar no banco de dados (append para criar histórico)
-        linhas_inseridas = len(df)
-        df.to_sql('financeiro', conn, if_exists='append', index=False)
-        
-        conn.close()
+        # Conectar ao banco SQLite usando context manager
+        with sqlite3.connect(DATABASE_FILE) as conn:
+            # Adicionar metadados de importação
+            df['data_importacao'] = datetime.now().isoformat()
+            df['arquivo_origem'] = os.path.basename(filepath)
+            
+            # Salvar no banco de dados (append para criar histórico)
+            linhas_inseridas = len(df)
+            df.to_sql('financeiro', conn, if_exists='append', index=False)
         
         return True, f"Arquivo processado com sucesso! {linhas_inseridas} linhas importadas.", linhas_inseridas
         
@@ -234,11 +232,13 @@ def upload_csv():
             
             if sucesso:
                 flash(mensagem, 'success')
+                # Remover arquivo temporário após processamento bem-sucedido para economizar espaço
+                try:
+                    os.remove(filepath)
+                except OSError:
+                    pass  # Ignorar erro se não conseguir remover
             else:
                 flash(mensagem, 'danger')
-            
-            # Opcional: Remover arquivo temporário após processamento
-            # os.remove(filepath)
             
         else:
             flash('Formato de arquivo inválido. Por favor, envie um arquivo CSV.', 'danger')
