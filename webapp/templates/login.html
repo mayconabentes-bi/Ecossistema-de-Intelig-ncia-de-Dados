@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Login - CDL Manaus{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>🔐 Acesso Restrito</h2>
+            <p>Sistema de Entrada de Dados</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
+            <div class="form-group">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" name="username" required 
+                       class="form-control" placeholder="Digite seu usuário" autofocus>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required 
+                       class="form-control" placeholder="Digite sua senha">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">
+                Entrar
+            </button>
+        </form>
+        
+        <div class="login-footer">
+            <p class="credentials-info">
+                <strong>Credenciais padrão:</strong><br>
+                Usuário: <code>admin</code> / Senha: <code>cdl2025</code><br>
+                Usuário: <code>gestor</code> / Senha: <code>gestor2025</code>
+            </p>
+            <p class="back-link">
+                <a href="{{ url_for('index') }}">← Voltar ao Dashboard</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

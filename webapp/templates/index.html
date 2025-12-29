@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CDL Manaus{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h2>📊 Dashboard de Visualização de Dados</h2>
+    <p class="hero-subtitle">Monitoramento em tempo real dos indicadores estratégicos</p>
+</section>
+
+<div class="dashboard-grid">
+    <!-- Painel A: O Pulmão (Financeiro) -->
+    <div class="panel">
+        <div class="panel-header">
+            <h3>🫁 Painel A: O Pulmão</h3>
+            <span class="panel-subtitle">Financeiro / Caixa</span>
+        </div>
+        <div class="panel-content">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Saldo de Caixa</div>
+                    <div class="kpi-value" id="saldo-caixa">R$ ---</div>
+                    <div class="kpi-change positive">Carregando...</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">IAR</div>
+                    <div class="kpi-value" id="iar">1.01</div>
+                    <div class="kpi-change neutral">Índice de Arrecadação Real</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Burn Rate</div>
+                    <div class="kpi-value negative" id="burn-rate">R$ -83.923</div>
+                    <div class="kpi-change negative">Nov/2025</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Estoque Suspensos</div>
+                    <div class="kpi-value warning" id="suspensos">R$ 742.779</div>
+                    <div class="kpi-change warning">Requer atenção</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel B: O Motor (Comercial) -->
+    <div class="panel">
+        <div class="panel-header">
+            <h3>⚙️ Painel B: O Motor</h3>
+            <span class="panel-subtitle">Comercial / Carteira</span>
+        </div>
+        <div class="panel-content">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">ICIO (Top 20)</div>
+                    <div class="kpi-value" id="icio">45%</div>
+                    <div class="kpi-change neutral">Índice de Concentração</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Churn Real</div>
+                    <div class="kpi-value" id="churn">3.2%</div>
+                    <div class="kpi-change positive">Abaixo da meta</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">IRR</div>
+                    <div class="kpi-value" id="irr">70/30</div>
+                    <div class="kpi-change neutral">Recorrente/Variável</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Entradas</div>
+                    <div class="kpi-value" id="entries">{{ entries_count }}</div>
+                    <div class="kpi-change positive">Registros no sistema</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel C: A Máquina (Produtos) -->
+    <div class="panel">
+        <div class="panel-header">
+            <h3>🏭 Painel C: A Máquina</h3>
+            <span class="panel-subtitle">Produtos / Margem</span>
+        </div>
+        <div class="panel-content">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Margem SPC</div>
+                    <div class="kpi-value positive" id="margem-spc">62.3%</div>
+                    <div class="kpi-change positive">Acima da meta (60%)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Certificado Digital</div>
+                    <div class="kpi-value warning" id="cert-digital">23%</div>
+                    <div class="kpi-change warning">Margem baixa</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Receita Mensal</div>
+                    <div class="kpi-value" id="receita">R$ ---</div>
+                    <div class="kpi-change neutral">Calculando...</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Custo Variável</div>
+                    <div class="kpi-value" id="custo">R$ ---</div>
+                    <div class="kpi-change neutral">Calculando...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="info-section">
+    <h3>📋 Sobre o Sistema</h3>
+    <p>Este dashboard apresenta uma visão consolidada dos principais indicadores do Ecossistema de Inteligência de Dados da CDL Manaus.</p>
+    <ul>
+        <li><strong>Painel A (O Pulmão):</strong> Monitora a saúde financeira e fluxo de caixa</li>
+        <li><strong>Painel B (O Motor):</strong> Acompanha a carteira de clientes e receita comercial</li>
+        <li><strong>Painel C (A Máquina):</strong> Analisa a rentabilidade e margem por produto</li>
+    </ul>
+    <p class="access-info">
+        <strong>Acesso Restrito:</strong> Para registrar novos dados, faça <a href="{{ url_for('login') }}">login no sistema</a>.
+    </p>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Carregar estatísticas em tempo real
+    async function loadStats() {
+        try {
+            const response = await fetch('/api/stats');
+            const stats = await response.json();
+            
+            if (stats.total_entries > 0) {
+                document.getElementById('entries').textContent = stats.total_entries;
+                
+                // Atualizar valores calculados
+                const valorTotal = stats.total_value;
+                if (valorTotal > 0) {
+                    document.getElementById('receita').textContent = 
+                        'R$ ' + valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao carregar estatísticas:', error);
+        }
+    }
+    
+    // Carregar ao iniciar e atualizar a cada 30 segundos
+    loadStats();
+    setInterval(loadStats, 30000);
+</script>
+{% endblock %}
