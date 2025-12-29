@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Entrada de Dados - CDL Manaus{% endblock %}
+
+{% block content %}
+<section class="data-entry-section">
+    <div class="section-header">
+        <h2>📝 Entrada de Dados</h2>
+        <p class="section-subtitle">Registre informações de faturamento e receitas</p>
+    </div>
+
+    <div class="entry-form-container">
+        <form method="POST" action="{{ url_for('data_entry') }}" class="data-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cliente">Cliente / Razão Social:</label>
+                    <input type="text" id="cliente" name="cliente" required 
+                           class="form-control" placeholder="Ex: Bemol, Nova Era, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipo_receita">Tipo de Receita:</label>
+                    <select id="tipo_receita" name="tipo_receita" required class="form-control">
+                        <option value="">Selecione...</option>
+                        <option value="MENSALIDADE">Mensalidade</option>
+                        <option value="CONSULTA_SPC">Consulta SPC</option>
+                        <option value="CERTIFICADO">Certificado Digital</option>
+                        <option value="SPC_SCORE">SPC Score</option>
+                        <option value="OUTROS">Outros</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="valor">Valor (R$):</label>
+                    <input type="number" id="valor" name="valor" step="0.01" required 
+                           class="form-control" placeholder="0.00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mes_referencia">Mês de Referência:</label>
+                    <input type="month" id="mes_referencia" name="mes_referencia" required 
+                           class="form-control" value="{{ now.strftime('%Y-%m') if now else '' }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes" name="observacoes" rows="3" 
+                          class="form-control" placeholder="Informações adicionais (opcional)"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    💾 Salvar Registro
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    🔄 Limpar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Histórico de Registros -->
+    <div class="records-section">
+        <h3>📊 Registros Recentes</h3>
+        {% if entries %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Valor</th>
+                        <th>Mês Ref.</th>
+                        <th>Usuário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in entries %}
+                    <tr>
+                        <td>{{ entry.timestamp[:16].replace('T', ' ') }}</td>
+                        <td>{{ entry.cliente }}</td>
+                        <td>
+                            <span class="badge badge-{{ 'primary' if entry.tipo_receita == 'MENSALIDADE' else 'secondary' }}">
+                                {{ entry.tipo_receita }}
+                            </span>
+                        </td>
+                        <td class="value-cell">R$ {{ "%.2f"|format(entry.valor) }}</td>
+                        <td>{{ entry.mes_referencia }}</td>
+                        <td>
+                            <span class="user-badge">{{ entry.usuario }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>📭 Nenhum registro encontrado. Adicione o primeiro registro usando o formulário acima.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-formatar valor monetário
+    const valorInput = document.getElementById('valor');
+    valorInput.addEventListener('blur', function() {
+        const value = parseFloat(this.value);
+        if (!isNaN(value)) {
+            this.value = value.toFixed(2);
+        }
+    });
+</script>
+{% endblock %}
