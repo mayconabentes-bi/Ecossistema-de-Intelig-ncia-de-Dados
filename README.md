@@ -9,6 +9,8 @@
 
 🧪 **Ambiente de Testes**: Demonstração funcional com simulação de alertas em tempo real.
 
+> **📌 Nota para Administradores**: Se o site não estiver acessível, consulte [GITHUB_PAGES_SETUP.md](./GITHUB_PAGES_SETUP.md) para instruções de configuração inicial do GitHub Pages.
+
 ---
 
 ## 🎯 Visão Geral
