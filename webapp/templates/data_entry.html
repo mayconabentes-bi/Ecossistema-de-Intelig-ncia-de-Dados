@@ -6,10 +6,37 @@
 <section class="data-entry-section">
     <div class="section-header">
         <h2>📝 Entrada de Dados</h2>
-        <p class="section-subtitle">Registre informações de faturamento e receitas</p>
+        <p class="section-subtitle">Importe arquivos CSV ou registre informações manualmente</p>
     </div>
 
+    <!-- Upload CSV Section -->
+    <div class="entry-form-container" style="margin-bottom: 30px;">
+        <h3 style="margin-bottom: 15px;">📤 Upload de Arquivo CSV (ETL Local)</h3>
+        <p style="color: #666; margin-bottom: 20px;">
+            Carregue arquivos CSV do sistema legado (RESUMO EXECUTIVO). O sistema processa automaticamente arquivos com encoding latin1.
+        </p>
+        <form method="POST" action="{{ url_for('upload_csv') }}" enctype="multipart/form-data" class="data-form">
+            <div class="form-group">
+                <label for="csv_file">Selecione o arquivo CSV:</label>
+                <input type="file" id="csv_file" name="csv_file" accept=".csv" required class="form-control">
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    ℹ️ Formato esperado: CSV com encoding latin1, separador vírgula (,)
+                </small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    🚀 Processar e Importar CSV
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <hr style="margin: 40px 0; border: 1px solid #e0e0e0;">
+
+    <!-- Manual Entry Form -->
     <div class="entry-form-container">
+        <h3 style="margin-bottom: 15px;">✍️ Entrada Manual de Dados</h3>
         <form method="POST" action="{{ url_for('data_entry') }}" class="data-form">
             <div class="form-row">
                 <div class="form-group">
