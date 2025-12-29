@@ -9,7 +9,58 @@
 
 🧪 **Ambiente de Testes**: Demonstração funcional com simulação de alertas em tempo real.
 
+> **📌 Nota**: A versão online é uma demonstração estática. Para o sistema completo com ETL, banco de dados e entrada de dados, veja a seção [Sistema Completo com Webapp](#-sistema-completo-com-webapp) abaixo.
+
 > **📌 Nota para Administradores**: Se o site não estiver acessível, consulte [GITHUB_PAGES_SETUP.md](./GITHUB_PAGES_SETUP.md) para instruções de configuração inicial do GitHub Pages.
+
+---
+
+## 💻 Sistema Completo com Webapp
+
+**NOVO**: Agora o sistema inclui uma aplicação Flask completa com funcionalidades avançadas:
+
+### ✨ Funcionalidades do Webapp
+- **🔐 Sistema de Login**: Autenticação segura com hash de senhas
+- **📊 Entrada de Dados**: Interface web para registro de faturamento e KPIs
+- **🔄 Pipeline ETL**: Importação automática de dados CSV do sistema legado
+- **💾 Persistência**: Banco de dados SQLite com histórico completo
+- **📈 API RESTful**: Endpoints para integração com outros sistemas
+- **✅ Validação de Dados**: Verificação automática de consistência
+
+### 🚀 Como Executar o Webapp
+
+```bash
+# 1. Clone o repositório (se ainda não fez)
+git clone https://github.com/mayconabentes-bi/Ecossistema-de-Intelig-ncia-de-Dados.git
+cd Ecossistema-de-Intelig-ncia-de-Dados
+
+# 2. Navegue até a pasta do webapp
+cd webapp
+
+# 3. Instale as dependências
+pip install -r requirements.txt
+
+# 4. Execute a aplicação
+python app.py
+
+# 5. Acesse no navegador
+# http://localhost:5000
+```
+
+**Credenciais de Teste**:
+- Usuário: `admin` / Senha: `cdl2025`
+- Usuário: `gestor` / Senha: `gestor2025`
+
+### 📚 Documentação do Webapp
+
+Para informações detalhadas sobre o webapp, incluindo:
+- Arquitetura do sistema
+- API endpoints
+- Estrutura do banco de dados
+- Importação de dados CSV
+- Deploy em produção
+
+Consulte: **[webapp/README.md](./webapp/README.md)**
 
 ---
 
@@ -238,14 +289,22 @@ Para implementar o sistema de alertas com WhatsApp e e-mail reais:
 
 ### Camada de Dados
 - **Fonte**: ERP financeiro (API/ODBC/CSV)
-- **Storage**: OneDrive Business (50GB)
+- **Storage**: OneDrive Business (50GB) + SQLite local
 - **ETL**: Power Query ou Python + pandas
-- **Formato**: Parquet (compressão e performance)
+- **Formato**: Parquet (compressão e performance) + SQLite (persistência)
+
+### Camada de Aplicação (NOVO)
+- **Backend**: Flask (Python 3.8+)
+- **Banco de Dados**: SQLite3 (desenvolvimento) / PostgreSQL (produção recomendado)
+- **Autenticação**: Werkzeug Security (hash de senhas)
+- **Processamento**: Pandas para ETL e análise de dados
+- **API**: RESTful endpoints para integração
 
 ### Camada de Visualização
 - **BI Tool**: Power BI Desktop (gratuito)
 - **Publicação**: Power BI Service (R$ 55/usuário/mês)
 - **Mobile**: Power BI Mobile App
+- **Web Demo**: GitHub Pages (HTML/CSS/JavaScript estático)
 
 ### Camada de Alertas
 - **Orquestração**: Power Automate (Microsoft Flow)
@@ -407,17 +466,24 @@ MIT License - Ver arquivo [LICENSE](./LICENSE)
 1. ✅ **Sistema Online**: Acessar [https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/](https://mayconabentes-bi.github.io/Ecossistema-de-Intelig-ncia-de-Dados/)
 2. ✅ **Testar Alertas**: Usar o painel de testes no dashboard principal
 3. ✅ **Revisar Documentação**: Ler especificações completas em [SISTEMA_ALERTAS.md](./SISTEMA_ALERTAS.md)
-4. ⬜ **Feedback**: Coletar impressões da Diretoria e Gerentes sobre o sistema
+4. ✅ **Executar Webapp Localmente**: Seguir instruções em [webapp/README.md](./webapp/README.md)
+5. ⬜ **Importar Dados CSV**: Testar o pipeline ETL com dados do sistema legado
+6. ⬜ **Testar Entrada de Dados**: Usar a interface web para registro de KPIs
+7. ⬜ **Feedback**: Coletar impressões da Diretoria e Gerentes sobre o sistema
 
 ### Para Implementação Produtiva
 1. ✅ Ler esta documentação completa
-2. ⬜ Aprovar orçamento e cronograma (ver custos detalhados acima)
-3. ⬜ Designar Analista BI responsável
-4. ⬜ Iniciar Fase 1 (Semana de Preparação) - seguir [ROTEIRO_IMPLEMENTACAO.md](./ROTEIRO_IMPLEMENTACAO.md)
-5. ⬜ Configurar alertas reais com WhatsApp/E-mail
-6. ⬜ Integrar com dados reais do ERP
-7. ⬜ Acompanhar progresso semanal
-8. ⬜ Celebrar o Go-Live produtivo! 🎉
+2. ✅ Pipeline ETL implementado e funcional
+3. ✅ Sistema de entrada de dados com autenticação
+4. ⬜ Aprovar orçamento e cronograma (ver custos detalhados acima)
+5. ⬜ Designar Analista BI responsável
+6. ⬜ Configurar ambiente de produção (servidor/cloud para webapp)
+7. ⬜ Migrar dados históricos do sistema legado via ETL
+8. ⬜ Configurar alertas reais com WhatsApp/E-mail
+9. ⬜ Integrar com dados reais do ERP
+10. ⬜ Implementar backup automatizado do banco de dados
+11. ⬜ Acompanhar progresso semanal
+12. ⬜ Celebrar o Go-Live produtivo! 🎉
 
 ---
 
