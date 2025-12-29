@@ -142,4 +142,7 @@ def api_stats():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Para desenvolvimento: debug=True
+    # Para produção: usar gunicorn ou waitress, debug=False
+    debug_mode = os.environ.get('FLASK_ENV') == 'development'
+    app.run(debug=debug_mode, host='0.0.0.0', port=5000)

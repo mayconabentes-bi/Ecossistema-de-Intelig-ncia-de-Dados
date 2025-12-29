@@ -41,15 +41,28 @@ cd webapp
 pip install -r requirements.txt
 ```
 
-3. **Execute a aplicação:**
+3. **Configure variáveis de ambiente (opcional mas recomendado):**
+```bash
+# Linux/Mac
+export SECRET_KEY="sua-chave-secreta-muito-segura-aqui"
+export FLASK_ENV="development"  # ou "production"
+
+# Windows
+set SECRET_KEY=sua-chave-secreta-muito-segura-aqui
+set FLASK_ENV=development
+```
+
+4. **Execute a aplicação:**
 ```bash
 python app.py
 ```
 
-4. **Acesse no navegador:**
+5. **Acesse no navegador:**
 ```
 http://localhost:5000
 ```
+
+> 💡 **Nota de Produção**: Para produção, use um servidor WSGI como gunicorn ou waitress ao invés de executar diretamente o Flask.
 
 ## 🔐 Credenciais de Acesso
 
@@ -188,11 +201,20 @@ gunicorn -w 4 -b 0.0.0.0:8000 app:app
 
 ## 📈 Próximas Melhorias
 
+### Prioritárias para Produção:
+- [ ] Migrar credenciais para variáveis de ambiente
+- [ ] Implementar banco de dados (PostgreSQL/MySQL) no lugar de JSON
+- [ ] Configurar servidor WSGI (gunicorn/waitress) 
+- [ ] Adicionar HTTPS/SSL
+- [ ] Implementar sistema robusto de gerenciamento de usuários
+- [ ] Adicionar rate limiting para APIs
+
+### Funcionalidades Futuras:
 - [ ] Integração direta com ERP
 - [ ] Gráficos interativos (Chart.js)
 - [ ] Export para Excel/CSV
 - [ ] Sistema de notificações
-- [ ] Dashboard de métricas em tempo real
+- [ ] Dashboard de métricas em tempo real (WebSocket)
 - [ ] Integração com WhatsApp (alertas)
 - [ ] Relatórios PDF automáticos
 - [ ] Análise preditiva com Machine Learning
