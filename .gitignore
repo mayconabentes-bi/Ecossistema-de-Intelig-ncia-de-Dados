@@ -29,6 +29,8 @@ instance/
 
 # Data files
 webapp/data/*.json
+webapp/uploads/
+webapp/database.db
 
 # IDE
 .vscode/
