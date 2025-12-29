@@ -79,7 +79,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for entry in entries[-20:]|reverse %}
+                    {% for entry in entries %}
                     <tr>
                         <td>{{ entry.timestamp[:16].replace('T', ' ') }}</td>
                         <td>{{ entry.cliente }}</td>

@@ -3,6 +3,7 @@ Ecossistema de Inteligência de Dados - CDL Manaus
 Sistema Interno de Visualização e Entrada de Dados
 """
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from markupsafe import escape
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import json
@@ -10,7 +11,8 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'cdl-manaus-secret-key-change-in-production'
+# IMPORTANTE: Em produção, usar variável de ambiente: app.secret_key = os.environ.get('SECRET_KEY')
+app.secret_key = os.environ.get('SECRET_KEY', 'cdl-manaus-secret-key-change-in-production')
 
 # Configurações
 DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'entries.json')
@@ -78,16 +80,25 @@ def logout():
 def data_entry():
     """Página de entrada de dados (protegida)"""
     if request.method == 'POST':
-        # Coletar dados do formulário
+        # Validar e sanitizar dados do formulário
+        try:
+            valor = float(request.form.get('valor', 0))
+            if valor < 0:
+                raise ValueError("Valor não pode ser negativo")
+        except (ValueError, TypeError):
+            flash('Valor inválido. Por favor, insira um número válido.', 'danger')
+            data = load_data()
+            return render_template('data_entry.html', entries=data)
+        
         entry = {
             'id': datetime.now().strftime('%Y%m%d%H%M%S'),
             'timestamp': datetime.now().isoformat(),
-            'usuario': session['username'],
-            'cliente': request.form.get('cliente'),
-            'tipo_receita': request.form.get('tipo_receita'),
-            'valor': float(request.form.get('valor', 0)),
-            'mes_referencia': request.form.get('mes_referencia'),
-            'observacoes': request.form.get('observacoes', '')
+            'usuario': escape(session['username']),
+            'cliente': escape(request.form.get('cliente', '')),
+            'tipo_receita': escape(request.form.get('tipo_receita', '')),
+            'valor': valor,
+            'mes_referencia': escape(request.form.get('mes_referencia', '')),
+            'observacoes': escape(request.form.get('observacoes', ''))
         }
         
         # Carregar dados existentes e adicionar novo
@@ -98,9 +109,10 @@ def data_entry():
         flash('Dados registrados com sucesso!', 'success')
         return redirect(url_for('data_entry'))
     
-    # Carregar dados para visualização
+    # Carregar dados para visualização (últimos 20 registros)
     data = load_data()
-    return render_template('data_entry.html', entries=data)
+    recent_entries = data[-20:][::-1] if data else []  # Últimos 20, ordem reversa
+    return render_template('data_entry.html', entries=recent_entries)
 
 @app.route('/api/entries')
 def api_entries():

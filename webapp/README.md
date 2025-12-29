@@ -63,7 +63,10 @@ http://localhost:5000
 - Usuário: `gestor`
 - Senha: `gestor2025`
 
-> ⚠️ **IMPORTANTE**: Altere estas credenciais em ambiente de produção!
+> ⚠️ **IMPORTANTE**: 
+> - Altere estas credenciais em ambiente de produção!
+> - As credenciais não são mais exibidas na interface de login por questões de segurança
+> - Em produção, implemente um sistema de gerenciamento de usuários adequado
 
 ## 📁 Estrutura do Projeto
 
@@ -127,18 +130,21 @@ Este sistema complementa os dashboards Power BI descritos na documentação prin
 
 ### Implementado:
 - ✅ Senhas com hash (Werkzeug)
-- ✅ Sessões seguras com secret key
+- ✅ Sessões seguras com secret key (configurável via variável de ambiente)
 - ✅ Proteção de rotas com decorator `@login_required`
-- ✅ Sanitização de inputs
+- ✅ Sanitização de inputs (Flask escape)
+- ✅ Validação de valores numéricos
+- ✅ Paginação de registros no backend
 
 ### Recomendações para Produção:
-- [ ] Alterar `app.secret_key` para valor seguro único
+- [ ] Configurar `SECRET_KEY` como variável de ambiente
 - [ ] Usar HTTPS (SSL/TLS)
 - [ ] Implementar rate limiting
 - [ ] Adicionar logs de auditoria
 - [ ] Migrar de JSON para banco de dados (PostgreSQL/MySQL)
 - [ ] Implementar backup automático
 - [ ] Adicionar validação CSRF
+- [ ] Implementar sistema de gerenciamento de usuários
 
 ## 🚀 Deploy em Produção
 
